@@ -143,7 +143,7 @@ storiesOf("Appointment", module)
   .addParameters({
     backgrounds: [{ name: "white", value: "#FFF", default: true }]
   })
-  .add("Appointment", () => <Appointment />)
+  .add("Appointment", () => <Appointment time="12pm"/>)
   .add("Appointment Empty", () => (
     <Fragment>
       <Appointment id={1} time="12pm" />
