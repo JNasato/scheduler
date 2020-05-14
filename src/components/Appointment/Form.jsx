@@ -22,6 +22,9 @@ export default function Form(props) {
     props.onSave(name, interviewer)
   }
 
+  // Props (CREATE): interviewers, onSave, onCancel
+  // Props (EDIT): interviewers, onSave, onCancel, interviewer(id), name
+
   return (
     <main className="appointment__card appointment__card--create">
       <section className="appointment__card-left">
