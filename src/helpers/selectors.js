@@ -10,10 +10,21 @@ export function getAppointmentsForDay(state, day) {
   return result;
 }
 
-export function getInterview(state, interview) {
+export function getInterviewersForDay(state, day) {
+  let result = [];
+  const selectedDay = state.days.find(d => d.name === day);
 
-  for (let i in state.interviewers) {
-    const interviewer = state.interviewers[i];
+  for (const int in state.interviewers) {
+    if(selectedDay && selectedDay.interviewers.includes(Number(int))) {
+      result.push(state.interviewers[int]);
+    }
+  }
+  return result;
+}
+
+export function getInterview(state, interview) {
+  for (let int in state.interviewers) {
+    const interviewer = state.interviewers[int];
     if (interview && interviewer.id === interview.interviewer) {
 
       return {

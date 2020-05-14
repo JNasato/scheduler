@@ -5,6 +5,7 @@ import DayList from './DayList';
 import Appointment from './Appointment';
 
 import { getAppointmentsForDay } from '../helpers/selectors';
+import { getInterviewersForDay } from '../helpers/selectors';
 import { getInterview } from '../helpers/selectors';
 
 import "components/Application.scss";
@@ -33,9 +34,28 @@ export default function Application(props) {
   }, []);
 
   const filteredAppointments = getAppointmentsForDay(state, state.day);
+  const filteredInterviewers = getInterviewersForDay(state, state.day);
 
   const schedule = filteredAppointments.map(appointment => {
     const interview = getInterview(state, appointment.interview);
+
+    // get values from interview form into top level state
+    function bookInterview(id, interview) {
+      const appointment = {
+        ...state.appointments[id],
+        interview: { ...interview }
+      };
+      const appointments = {
+        ...state.appointments,
+        [id]: appointment
+      };
+      setState({
+        ...state, 
+        appointments
+      }); 
+
+      axios.put(`/api/appointments/${id}`, appointment)
+    }
 
     return(
       <Appointment
@@ -43,6 +63,8 @@ export default function Application(props) {
         id={appointment.id}
         time={appointment.time}
         interview={interview}
+        interviewers={filteredInterviewers}
+        bookInterview={bookInterview}
       />
     );
   });
@@ -72,11 +94,6 @@ export default function Application(props) {
       </section>
       <section className="schedule">
         {schedule}
-        {/* {filteredAppointments.map(appointment => {
-          return (
-            <Appointment key={appointment.id} {...appointment} />
-          )  
-        })} */}
         <Appointment key="last" time="5pm" />
       </section>
     </main>
