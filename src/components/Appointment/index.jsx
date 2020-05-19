@@ -12,6 +12,7 @@ import useVisualMode from '../../hooks/useVisualMode';
 
 import "./styles.scss";
 
+//Props: key(id), id, time, interview, interviewers, bookInterview(fn), cancelInterview(fn)
 export default function Appointment(props) {
   
   const EMPTY = "EMPTY";
@@ -28,16 +29,8 @@ export default function Appointment(props) {
     props.interview ? SHOW : EMPTY
   );
 
-  function add() {
-    transition(CREATE);
-  }
-
   function cancel() {
     back();
-  }
-
-  function edit() {
-    transition(EDIT);
   }
 
   function save(name, interviewer) {
@@ -47,16 +40,12 @@ export default function Appointment(props) {
     };
     transition(SAVING);
     
-    props.bookInterview(props.id, interview)
+    props.bookInterview(props.id, interview, mode)
     .then(() => transition(SHOW))
     .catch((error) => transition(ERROR_SAVE, true))
   }
-  
-  function confirmDelete() {
-    transition(CONFIRM);
-  }
 
-  function destroy(event) {
+  function destroy() {
     transition(DELETING, true);
 
     props.cancelInterview(props.id)
@@ -64,16 +53,18 @@ export default function Appointment(props) {
     .catch((error) => transition(ERROR_DELETE, true))
   }
 
+ 
+
   return (
     <article className="appointment">
       <Header time={props.time} />
-      {mode === EMPTY && <Empty onAdd={add} />}
+      {mode === EMPTY && <Empty onAdd={() => transition(CREATE)} />}
       {mode === SHOW && (
         <Show
           student={props.interview.student}
           interviewer={props.interview.interviewer}
-          onEdit={edit}
-          onDelete={confirmDelete}
+          onEdit={() => transition(EDIT)}
+          onDelete={() => transition(CONFIRM)}
         />
       )}
       {mode === CREATE && (

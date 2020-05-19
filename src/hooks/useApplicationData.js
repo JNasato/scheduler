@@ -2,6 +2,24 @@ import { useState, useEffect } from 'react';
 import axios from "axios";
 
 export default function useApplicationData() {
+  const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL)
+  useEffect(() => {
+    ws.onopen = event => {
+      ws.send("ping");
+      ws.onmessage = event => {
+        const msg = JSON.parse(event.data);
+        // if (msg.type === "SET_INTERVIEW") {
+        //   if (msg.interview) {
+        //     bookInterview(msg.id, msg.interview);
+        //   } else {
+        //     cancelInterview(msg.id);
+        //   }
+        // }
+        console.log("Message Received:", msg)
+      }
+    }
+    return ws.close();
+  });
 
 
   const [state, setState] = useState({
@@ -26,7 +44,7 @@ export default function useApplicationData() {
   
   const setDay = day => setState({ ...state, day });
 
-  function bookInterview(id, interview) {
+  async function bookInterview(id, interview, mode) {
     const appointment = {
       ...state.appointments[id],
       interview: { ...interview }
@@ -36,28 +54,26 @@ export default function useApplicationData() {
       [id]: appointment
     };
 
+    const axiosRequest = await axios.put(`/api/appointments/${id}`, appointment)
+
+    //update and rerender interview spots when booking (not on edit)
     const days = state.days.map(day => {
-        if(day.name === state.day) {
-          return {
-            ...day,
-            spots: day.spots - 1
-          }
-        } else {
-          return day;
+      if(mode === "CREATE" && day.name === state.day) {
+        return {
+          ...day,
+          spots: day.spots - 1
         }
-      });
-     
-    setState({
-      ...state, 
-      appointments,
-      days
-    }); 
+      } else {
+        return day;
+      }
+    });
     
-    return axios.put(`/api/appointments/${id}`, appointment);
-    
+    setState({ ...state, appointments, days });
+
+    return axiosRequest;
   }
 
-  function cancelInterview(id) {
+  async function cancelInterview(id) {
     const appointment = {
       ...state.appointments[id],
       interview: null
@@ -66,24 +82,24 @@ export default function useApplicationData() {
       ...state.appointments,
       [id]: appointment
     };
+    
+    const axiosRequest = await axios.delete(`/api/appointments/${id}`)
+
+    //update and rerender interview spots when cancelling
     const days = state.days.map(day => {
-        if(day.name === state.day) {
-          return {
-            ...day,
-            spots: day.spots + 1
-          }
-        } else {
-          return day;
+      if(day.name === state.day) {
+        return {
+          ...day,
+          spots: day.spots + 1
         }
-      });
-
-    setState({
-      ...state,
-      appointments,
-      days
+      } else {
+        return day;
+      }
     });
+    
+    setState({ ...state, appointments, days });
 
-    return axios.delete(`/api/appointments/${id}`);
+    return axiosRequest;
   }
 
 
