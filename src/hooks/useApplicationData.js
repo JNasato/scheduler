@@ -2,10 +2,10 @@ import { useState, useEffect } from 'react';
 import axios from "axios";
 
 export default function useApplicationData() {
+
   const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL)
   useEffect(() => {
     ws.onopen = event => {
-      ws.send("ping");
       ws.onmessage = event => {
         const msg = JSON.parse(event.data);
         // if (msg.type === "SET_INTERVIEW") {
@@ -18,7 +18,8 @@ export default function useApplicationData() {
         console.log("Message Received:", msg)
       }
     }
-    return ws.close();
+    const cleanup = () => ws.close();
+    return cleanup;
   });
 
 

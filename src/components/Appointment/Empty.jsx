@@ -1,6 +1,8 @@
 import React from 'react';
 
 export default function Empty(props) {
+
+  //Props: onAdd(fn)
   return (
     <main className="appointment__add">
       <img
