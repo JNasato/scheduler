@@ -8,13 +8,6 @@ export default function useApplicationData() {
     ws.onopen = event => {
       ws.onmessage = event => {
         const msg = JSON.parse(event.data);
-        // if (msg.type === "SET_INTERVIEW") {
-        //   if (msg.interview) {
-        //     bookInterview(msg.id, msg.interview);
-        //   } else {
-        //     cancelInterview(msg.id);
-        //   }
-        // }
         console.log("Message Received:", msg)
       }
     }
