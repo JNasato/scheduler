@@ -7,9 +7,9 @@ Database: Postgresql
 
 ## Screenshots
 
-!["Screenshot of desktop view tweets"](https://raw.githubusercontent.com/JNasato/tweeter/master/docs/Tweeter_desktop-view.png)
-!["Screenshot of tablet view tweets"](https://raw.githubusercontent.com/JNasato/tweeter/master/docs/Tweeter_tablet-view.png)
-!["Screenshot of tweet compose box"](https://raw.githubusercontent.com/JNasato/tweeter/master/docs/Tweeter_tweet-form.png)
+!["Screenshot of empty appointments"](https://raw.githubusercontent.com/JNasato/scheduler/master/docs/empty_appointments.png)
+!["Screenshot of appointment form being filled in with a name and chosen interviewer"](https://raw.githubusercontent.com/JNasato/scheduler/master/docs/appointment_form_filled_in.png)
+!["Screenshot of booked interviews, as well as one appointment in the process of being deleted"](https://raw.githubusercontent.com/JNasato/scheduler/master/docs/booked_appointments.png)
 
 ## Heroku and Netlify Deployment
 
