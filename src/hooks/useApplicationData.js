@@ -3,6 +3,7 @@ import axios from "axios";
 
 export default function useApplicationData() {
 
+  //Attempt at websocket connectivity
   const ws = new WebSocket(process.env.REACT_APP_WEBSOCKET_URL)
   useEffect(() => {
     ws.onopen = event => {
@@ -23,9 +24,8 @@ export default function useApplicationData() {
     interviewers: {}
   });
 
-  
-  useEffect(() => {
-    
+  //Fetch all database data and set it as state when the page first loads
+  useEffect(() => {  
     Promise.all([
       Promise.resolve(axios.get('/api/days')),
       Promise.resolve(axios.get('/api/appointments')),
@@ -48,6 +48,7 @@ export default function useApplicationData() {
       [id]: appointment
     };
 
+    //wait until axios request is finished before updating state locally
     const axiosRequest = await axios.put(`/api/appointments/${id}`, appointment)
 
     //update and rerender interview spots when booking (not on edit)
@@ -77,6 +78,7 @@ export default function useApplicationData() {
       [id]: appointment
     };
     
+    //wait until axios request is finished before updating state locally
     const axiosRequest = await axios.delete(`/api/appointments/${id}`)
 
     //update and rerender interview spots when cancelling

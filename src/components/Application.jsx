@@ -10,8 +10,8 @@ import { getInterview } from '../helpers/selectors';
 
 import "components/Application.scss";
 
-
-export default function Application(props) {
+//No props passed in (top level component)
+export default function Application() {
 
   const {
     state, 
